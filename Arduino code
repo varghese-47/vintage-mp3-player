@@ -1,0 +1,86 @@
+#include "SoftwareSerial.h"
+#include "DFRobotDFPlayerMini.h"
+
+SoftwareSerial mySerial(2, 3); // RX, TX
+DFRobotDFPlayerMini myDFPlayer;
+
+// Buttons
+const int prevBtn = 4;
+const int playPauseBtn = 5;
+const int nextBtn = 6;
+
+// Rotary Encoder
+const int CLK = 7;
+const int DT = 8;
+
+int lastCLK;
+int volume = 25;
+
+bool isPlaying = true;
+
+void setup() {
+  pinMode(prevBtn, INPUT_PULLUP);
+  pinMode(playPauseBtn, INPUT_PULLUP);
+  pinMode(nextBtn, INPUT_PULLUP);
+
+  pinMode(CLK, INPUT);
+  pinMode(DT, INPUT);
+
+  mySerial.begin(9600);
+
+  if (!myDFPlayer.begin(mySerial)) {
+    while(true);
+  }
+
+  myDFPlayer.volume(volume);
+  myDFPlayer.play(1);
+
+  lastCLK = digitalRead(CLK);
+}
+
+void loop() {
+
+  // PREVIOUS
+  if (digitalRead(prevBtn) == LOW) {
+    delay(200);
+    myDFPlayer.previous();
+  }
+
+  // PLAY / PAUSE
+  if (digitalRead(playPauseBtn) == LOW) {
+    delay(200);
+    if (isPlaying) {
+      myDFPlayer.pause();
+      isPlaying = false;
+    } else {
+      myDFPlayer.start();
+      isPlaying = true;
+    }
+  }
+
+  // NEXT
+  if (digitalRead(nextBtn) == LOW) {
+    delay(200);
+    myDFPlayer.next();
+  }
+
+  // ROTARY ENCODER (Volume Control)
+  int currentCLK = digitalRead(CLK);
+
+  if (currentCLK != lastCLK) {
+    if (digitalRead(DT) != currentCLK) {
+      volume++;
+      if (volume > 50) volume = 50;
+    } else {
+      volume--;
+      if (volume < 0) volume = 0;
+    }
+
+    int dfVolume = map(volume, 0, 50, 0, 30);
+    myDFPlayer.volume(dfVolume);
+
+    delay(50);
+  }
+
+  lastCLK = currentCLK;
+}
