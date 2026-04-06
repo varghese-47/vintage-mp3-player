@@ -1,6 +1,5 @@
 # MP3 Audio Player using Arduino 
-It is a MP3 Audio Player using Arduino ...It has a display to show the song, push buttons to pause/play ,to play next song or to play the previous song, a rotatory wheel to increase or decrease the volume
-
+It is a MP3 Audio Player using Arduino ...It has a display to show the song, push buttons to pause/play ,to play next song or to play the previous song, a rotatory wheel to increase or decrease the volume and also it is RECHARGABLE (With a c cable)
 Why I am making this:
 Mainly I am making this for the cool factor and also to get more into electronics
 
